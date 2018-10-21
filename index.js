@@ -1,14 +1,16 @@
+"use strict"
 
-import hue from 'node-hue-api'
 import darkSky from 'dark-sky'
+import hue from 'node-hue-api'
 import moment from 'moment'
-import config from 'config.js'
 import winston from 'winston'
+import config from 'config.js'
 
 // Hue API const and initialization
 const hueApi = new hue.HueApi(config.hue.ip, config.hue.user)
-const darkSky = new DarkSky(config.darkSky.key) 
+const darkSkyAPI = new DarkSky(config.darkSky.key) 
 const latLng = config.latLng
+const time = config.time
 
 var weatherData = {}
 var bridgeData = {}
@@ -27,13 +29,9 @@ function betweenOnAndOff() {
   return currentTime.isBetween(lightsOnTime, lightsOffTime)
 }
 
-//returns true if the sun is up
-function sunIsUp() {
-  return currentTime.isBetween(sunriseTime, lightsOnTime)
-}
 //returns true if the clouds cover 2/3 of the sky
 function cloudyOutside() {
-  return (weatherData.cloudCover >= .66)
+  return (weatherData.cloudCover >= 0.66)
 }
 
 //gets all the lights in the bridge
@@ -59,6 +57,11 @@ async function getLightStates() {
   }
 
   return Promise.resolve(lightStates)
+}
+
+//returns true if the sun is up
+function sunIsUp() {
+  return currentTime.isBetween(sunriseTime, lightsOnTime)
 }
 
 //Turns the lights on
@@ -126,7 +129,9 @@ async function mainLoop() {
   })
 }
 
-mainLoop();
+//run the main Loop every 300000 ms (5 minutes)
+setInterval(mainLoop, 300000);
 
 //TODO write setInterval function
 //change conosle logs to winston logs, log to stdout and logfiles
+//calculate the light intensity by time of day and cloudiness
