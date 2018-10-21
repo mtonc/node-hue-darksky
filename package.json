@@ -1,0 +1,17 @@
+{
+  "name": "mevn",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.17.0",
+    "dark-sky": "^1.1.4",
+    "moment": "^2.22.2",
+    "node-hue-api": "^2.4.3",
+    "nodemon": "^1.17.5",
+    "winston": "^3.1.0"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": "standard"
+  }
+}
