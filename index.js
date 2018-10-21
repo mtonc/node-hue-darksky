@@ -1,5 +1,3 @@
-"use strict"
-
 import darkSky from 'dark-sky'
 import hue from 'node-hue-api'
 import moment from 'moment'
@@ -8,9 +6,9 @@ import config from 'config.js'
 
 // Hue API const and initialization
 const hueApi = new hue.HueApi(config.hue.ip, config.hue.user)
-const darkSkyAPI = new DarkSky(config.darkSky.key) 
+const darkSkyAPI = new DarkSky(config.darkSky.key)
 const latLng = config.latLng
-const time = config.time
+const intervalTime = config.time
 
 var weatherData = {}
 var bridgeData = {}
@@ -130,7 +128,7 @@ async function mainLoop() {
 }
 
 //run the main Loop every 300000 ms (5 minutes)
-setInterval(mainLoop, 300000);
+setInterval(mainLoop, intervalTime);
 
 //TODO write setInterval function
 //change conosle logs to winston logs, log to stdout and logfiles
