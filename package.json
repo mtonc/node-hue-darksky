@@ -1,9 +1,9 @@
 {
   "name": "node-hue-control",
   "description": "Control lights via the Phillips Hue API based on weather data from the DarkSky API",
-  "version": "0.0.1",
-  "private": "true",
-  "preferGlobal": "true",
+  "version": "0.1",
+  "private": true,
+  "preferGlobal": true,
   "bin": {
     "hue-control": "index.js"
   },
