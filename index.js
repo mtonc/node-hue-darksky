@@ -4,11 +4,11 @@ import darkSky from 'dark-sky'
 import hue from 'node-hue-api'
 import moment from 'moment'
 import winston from 'winston'
-import config from 'config.js'
+import config from './config.js'
 
 // Hue API const and initialization
 const hueApi = new hue.HueApi(config.hue.ip, config.hue.user)
-const darkSkyAPI = new DarkSky(config.darkSky.key)
+const darkSkyAPI = new darkSky(config.darkSky.key)
 const latLng = config.latLng
 const intervalTime = config.time
 

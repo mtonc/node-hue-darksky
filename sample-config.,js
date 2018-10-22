@@ -1,4 +1,9 @@
-export default {
+"use strict";
+Object.defineProperty(exports, "_esModules", {
+  value: true
+});
+
+module.exports = {
   hue: {
     ip: "IP Address of Hue Bridge on your local network",
     user: 'Phillips Hue User Key' // please visit https://www.developers.meethue.com/documentation/getting-started for more details.
