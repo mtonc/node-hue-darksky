@@ -1,7 +1,20 @@
 {
-  "name": "mevn",
+  "name": "node-hue-control",
+  "description": "Control lights via the Phillips Hue API based on weather data from the DarkSky API",
   "version": "0.0.1",
-  "private": true,
+  "private": "true",
+  "preferGlobal": "true",
+  "bin": {
+    "hue-control": "index.js"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "scripts": {
+    "build": "babel index.js -o bundle.js",
+    "watch": "babel index.js -w -o bundle.js",
+    "run": "babel index.js -o bundle.js; node bundle.js"
+  },
   "dependencies": {
     "axios": "^0.17.0",
     "dark-sky": "^1.1.4",
@@ -13,5 +26,22 @@
   "eslintConfig": {
     "root": true,
     "extends": "standard"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
   }
 }

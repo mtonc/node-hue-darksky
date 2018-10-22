@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 import darkSky from 'dark-sky'
 import hue from 'node-hue-api'
 import moment from 'moment'
