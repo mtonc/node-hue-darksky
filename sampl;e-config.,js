@@ -1,0 +1,20 @@
+export default {
+  hue: {
+    ip: "IP Address of Hue Bridge on your local network",
+    user: 'Phillips Hue User Key' // please visit https://www.developers.meethue.com/documentation/getting-started for more details.
+  },
+  darkSky: {
+    key: 'DarkSky API Key' // sign up for an account and get an API key here: https://darksky.net/dev/register
+  },
+  // the latitude and longitude of the darksky forcast. This is the lat/lng for Wrigley Field in Chicago, IL
+  // Needed for API calls!
+  latLng: {
+    "lat": 41.9484,
+    "lng": -87.6553
+  },
+  // the time in miliseconds for the setInterval command
+  // this sets how often the api request and light controls will run
+  // default is 300000 ( 5 minutes)
+  // This results in ~288 calls per day to the DarkSky API which is under the free use quota of 1000/day
+  time: 300000
+}
