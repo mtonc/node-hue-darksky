@@ -13,14 +13,13 @@
   "scripts": {
     "build": "babel index.js -o bundle.js",
     "watch": "babel index.js -w -o bundle.js",
-    "run": "babel index.js -o bundle.js; node bundle.js"
+    "execute": "babel index.js -o bundle.js; node bundle.js"
   },
   "dependencies": {
     "axios": "^0.17.0",
     "dark-sky": "^1.1.4",
     "moment": "^2.22.2",
     "node-hue-api": "^2.4.3",
-    "nodemon": "^1.17.5",
     "winston": "^3.1.0"
   },
   "eslintConfig": {

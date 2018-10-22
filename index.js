@@ -106,6 +106,7 @@ async function turnLightsOn() {
   var lights = await getLightStates()
   var lightsTurnedOn = {}
 
+  // cache Object.values()
   lights = Object.values(lights)
 
   // for each light in lights, if the light is off, attempt to turn it on  and handle any errors.
