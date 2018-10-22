@@ -1,14 +1,20 @@
 #! /usr/bin/env node
 
-import darkSky from 'dark-sky'
+/*
+* @todo: Add winston logging instead of console.log
+* @todo: Add google firebase cloud function to store logs in firebase data store.
+*
+*/
+
+import DarkSky from 'dark-sky'
 import hue from 'node-hue-api'
 import moment from 'moment'
-import winston from 'winston'
+//import winston from 'winston'
 import config from './config.js'
 
-// Hue API const and initialization
+// API and config variables
 const hueApi = new hue.HueApi(config.hue.ip, config.hue.user)
-const darkSkyAPI = new darkSky(config.darkSky.key)
+const darkSkyAPI = new DarkSky(config.darkSky.key)
 const latLng = config.latLng
 const intervalTime = config.time
 
@@ -24,28 +30,48 @@ var lightStateObject = hue.lightState.create()
 // setup the connection to the Hue bridge. 
 hueApi.config()
 
-//returns a bool of the current time being beteen on/off times
+/**
+ * betweenOnAndOff() 
+ * 
+ * @param: none
+ * @returns: Boolean. True if the current time is between lightsOnTime and lightsOffTime
+ */
 function betweenOnAndOff() {
   return currentTime.isBetween(lightsOnTime, lightsOffTime)
 }
 
-//returns true if the clouds cover 2/3 of the sky
+/**
+ * cloudyOutside
+ *
+ * @returns Boolean. True if the cloud cover is greater than 66% (two/thirds)
+ */
 function cloudyOutside() {
   return (weatherData.cloudCover >= 0.66)
 }
 
-//gets all the lights in the bridge
+
+/**
+ * getLights
+ *
+ * @returns Object. The lights object from the hueAPI
+ */
 function getLights() {
   return hueApi.lights()
 }
 
-//returns simplified lightState of all the lights, including their id, if it's on/off, and the brightness value (0-255)
+/**
+ * getLightStates
+ *
+ * @returns Promise. The promise resolves the lightStates array of light simplified light state objects
+ */
 async function getLightStates() {
   var myLights = await getLights()
-  myLights = myLights.lights
-
   var lightStates = null
 
+  // grab the actual lights inside of myLights
+  myLights = myLights.lights
+
+  // for each light, grab the state, build a simplified light state object, and store it in lightStates
   for ( const light of myLights ) {
     var state = await hueApi.lightStatus(light.id)
     state = state.state
@@ -60,16 +86,31 @@ async function getLightStates() {
 }
 
 //returns true if the sun is up
+/**
+ * sun is up
+ *
+ * @returns Boolean. True if the time is between sunrise and 1 hour before sunset
+ */
 function sunIsUp() {
   return currentTime.isBetween(sunriseTime, lightsOnTime)
 }
 
-//Turns the lights on
+
+/**
+ * turnLightsOn
+ *
+ * @returns Promise. Resolves to true
+ * @todo If there are false values in the lightsTurnedOn Object, reject the promise
+ */
 async function turnLightsOn() {
   var lights = await getLightStates()
   var lightsTurnedOn = {}
 
-  for ( const light of Object.values(lights) ) {
+  lights = Object.values(lights)
+
+  // for each light in lights, if the light is off, attempt to turn it on  and handle any errors.
+  for ( const light of lights ) {
+    // if light is not on , attempt to set the light state.
     if (!light.lightOn) {
       hueApi.setLightState( light.id, lightStateObject.on() ).then( res => {
         console.log("Turned on light " + light.id )
@@ -78,17 +119,21 @@ async function turnLightsOn() {
         console.log(res)
         lightsTurnedOn[light.id] = false
       })
-    }
-    else {
+    // Otherwise, the light is already on.   
+    } else {
       console.log("Light " + light.id + " is already on!")
       lightsTurnedOn[light.id] = null
     }
   }
-  
-  //TODO: if there are valse values in the lightsTurnedOn Object, reject the promise
+
   return Promise.resolve(true)
 }
 
+/**
+ * updateTimeWeather
+ *
+ * @returns A Promise passed from the darkSkyApi
+ */
 async function updateTimeWeather() {
 
   //update the time
@@ -99,7 +144,7 @@ async function updateTimeWeather() {
   lightsOffTime.hour(23)
   lightsOffTime.minute(30) 
   
-  return await darkSky
+  return await darkSkyAPI
     .latitude(latLng.lat)
     .longitude(latLng.lng)
     .time(currentTime)
@@ -119,6 +164,13 @@ async function updateTimeWeather() {
     })
 }
 
+/**
+ * mainLoop
+ * 
+ * @description Runs the code. Updates the global time and weather, 
+ * then turns lights on if it is the propertime or weather conditions
+ *
+ */
 async function mainLoop() {
   await updateTimeWeather().then(function() {
     if (betweenOnAndOff() || (cloudyOutside() && sunIsUp() ) ) {
@@ -129,9 +181,7 @@ async function mainLoop() {
   })
 }
 
-//run the main Loop every 300000 ms (5 minutes)
-setInterval(mainLoop, intervalTime);
-
-//TODO write setInterval function
-//change conosle logs to winston logs, log to stdout and logfiles
-//calculate the light intensity by time of day and cloudiness
+(function () {
+  mainLoop()
+  setInterval(mainLoop, intervalTime)
+})
