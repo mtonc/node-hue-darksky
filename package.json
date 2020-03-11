@@ -1,0 +1,28 @@
+{
+  "name": "node-hue-darksy",
+  "version": "1.0.0",
+  "description": "Manages Hue lights via API. Weather and time based activation.",
+  "main": "index.js",
+  "repository": "https://github.com/mtonc/node-hue-darksky",
+  "author": "mtonc",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "node index.js",
+    "build": "babel index.js -o compiled.js"
+  },
+  "dependencies": {
+    "core-js": "^3.6.4",
+    "darksky": "^0.1.2",
+    "dotenv": "^8.2.0",
+    "node-hue-api": "^4.0.5",
+    "regenerator-runtime": "^0.13.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "babel-plugin-minify-simplify": "^0.5.1",
+    "npm": "^6.14.2"
+  }
+}
