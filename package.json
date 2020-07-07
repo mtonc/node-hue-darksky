@@ -23,6 +23,6 @@
     "@babel/core": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
     "babel-plugin-minify-simplify": "^0.5.1",
-    "npm": "^6.14.2"
+    "npm": "^6.14.6"
   }
 }
